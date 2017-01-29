@@ -2,9 +2,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 const Book = require('./Book.model');
 
-const port = 8086;
+const port = 8081;
 const db = 'localhost:27017/books';
 
 mongoose.connect(db);
@@ -13,6 +14,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
+// View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+var newbook = require('./routes/newbook');
+app.use('/newbook', newbook);
+var vsebooks = require('./routes/vsebooks');
+app.use('/vsebooks', vsebooks);
+
+
 
 app.get('/', (req, res) =>
   res.send('happy to be here'));
