@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const Book = require('./Book.model');
 
-const port = 8081;
+const port = 8051;
 const db = 'localhost:27017/books';
 
 mongoose.connect(db);
@@ -18,17 +18,23 @@ app.use(bodyParser.urlencoded({
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 var newbook = require('./routes/newbook');
 app.use('/newbook', newbook);
 var vsebooks = require('./routes/vsebooks');
 app.use('/vsebooks', vsebooks);
 
+//var index = require('./routes/index');
+//app.use('/', index);
 
-
-app.get('/', (req, res) =>
-  res.send('happy to be here'));
+app.get('/', function(req, res){
+  Book.find({},{},function(err, results){
+    res.render('index', {
+        "results": results
+    });
+  });
+});
 
 app.get('/books', (req, res) => {
   console.log('getting all books');

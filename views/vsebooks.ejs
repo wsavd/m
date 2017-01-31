@@ -4,5 +4,8 @@
         <title>главная</title>
     </head>
     <body>
+        {% for note in notes %}
+            {{ note.title }}
+        {% endfor %}
     </body>
 </html>
