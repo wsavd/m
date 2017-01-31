@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const Book = require('./Book.model');
 
-const port = 8051;
+const port = 3000;
 const db = 'localhost:27017/books';
 
 mongoose.connect(db);
@@ -18,7 +18,9 @@ app.use(bodyParser.urlencoded({
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
+app.set('view options', { pretty: true });
+
 
 var newbook = require('./routes/newbook');
 app.use('/newbook', newbook);
@@ -31,7 +33,7 @@ app.use('/vsebooks', vsebooks);
 app.get('/', function(req, res){
   Book.find({},{},function(err, results){
     res.render('index', {
-        "results": results
+        "books": results
     });
   });
 });
