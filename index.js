@@ -2,35 +2,39 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 const Book = require('./Book.model');
 
-const port = 8080;
-const db = 'mongodb://localhost:27017';
+const port = 5007;
+const db = 'localhost:27017/books';
 
-// Use native ES6 promises
-mongoose.Promise = global.Promise;
 mongoose.connect(db);
-
-// connect to mongo function
-// const open = () => {
-//   let connection = mongoose.connection;
-//   mongoose.Promise = global.Promise;
-//   mongoose.connect(db);
-//   mongoose.connection.on('open', () => {
-//             console.log('We have connected to mongodb');
-//         });
-//   return connection;
-// };
-
-// open();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.get('/', (req, res) =>
-  res.send('happy to be here'));
+
+// View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'public')));
+
+//по маршруту /newbook отдаем страничку newbook.pug с формой, которая шлет данные методом post на /book 
+var newbook = require('./routes/newbook');
+app.use('/newbook', newbook);
+
+//var index = require('./routes/index');
+//app.use('/', index);
+
+app.get('/', function(req, res){
+  Book.find({},{},function(err, results){
+    res.render('index', {
+        "books": results
+    });
+  });
+});
 
 app.get('/books', (req, res) => {
   console.log('getting all books');
@@ -44,33 +48,6 @@ app.get('/books', (req, res) => {
     }
  })
 });
-
-// app.get('/books', (req, res) => {
-//   console.log('getting all books');
-//   Book.find({})
-//     .exec((err, books) => {
-//       if(err) {
-//         res.send('error occured')
-//       } else {
-//         console.log(books);
-//         res.json(books);
-//     }
-//  })
-// });
-
-// Promise Example
-app.get('/books', (req, res) => {
-  console.log('getting all books');
-  Book.find({})
-    .exec()
-    .then((books) => {
-      console(books);
-      res.json(books);
-    })
-    .catch((err) => {
-      res.send('error occured');
-    });
- });
 
 app.get('/books/:id', (req, res) =>
  // console.log('getting all books');

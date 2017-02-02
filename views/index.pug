@@ -1,9 +1,9 @@
-html
-  head
-    title store
-  body
-    ul
-    each book in books 
-     li=book.title
-     li=book.author
-     li=book.category
+extends layout.pug
+block content
+  .items-container
+    each book in books
+      .item 
+        h1=book.title
+        p= book.author
+        p= book.category
+        a(href='url') link text
