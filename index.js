@@ -4,8 +4,9 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const Book = require('./Book.model');
+app.locals.moment = require("moment");
 
-const port = 5007;
+const port = 8000;
 const db = 'localhost:27017/books';
 
 mongoose.connect(db);
@@ -29,6 +30,7 @@ app.use('/newbook', newbook);
 //app.use('/', index);
 
 app.get('/', function(req, res){
+  //запрос в модель  через класс доступ
   Book.find({},{},function(err, results){
     res.render('index', {
         "books": results
@@ -50,7 +52,6 @@ app.get('/books', (req, res) => {
 });
 
 app.get('/books/:id', (req, res) =>
- // console.log('getting all books');
   Book.findOne({
     _id: req.params.id
     })
