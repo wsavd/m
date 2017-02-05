@@ -1,34 +1,28 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const path = require('path');
-const Book = require('./Book.model');
-app.locals.moment = require("moment");
+var express = require('express');
+var app = express();
+var path = require('path');
+var bodyParser = require('body-parser');//для данных из форм
+var mongoose = require('mongoose');
+var Book = require('./models/book.model');
 
-const port = 8000;
-const db = 'localhost:27017/books';
+var port = 8080;
+var db = 'localhost/books';
 
 mongoose.connect(db);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
+app.use(bodyParser.urlencoded({extended: true}));
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
-//по маршруту /newbook отдаем страничку newbook.pug с формой, которая шлет данные методом post на /book 
-var newbook = require('./routes/newbook');
-app.use('/newbook', newbook);
-
-//var index = require('./routes/index');
-//app.use('/', index);
-
+//Controllers
+//по маршруту /addbook отдаем страничку newbook.pug с формой, которая шлет данные методом post на /book 
+var addbookCtrl = require('./controllers/addbook');
+app.get('/addbook', addbookCtrl.addbook);
+/*
 app.get('/', function(req, res){
   //запрос в модель  через класс доступ
   Book.find({},{},function(err, results){
@@ -37,85 +31,35 @@ app.get('/', function(req, res){
     });
   });
 });
+*/
+var HomeController =require('./controllers/home')
+app.get('/', HomeController.showHome);
 
-app.get('/books', (req, res) => {
-  console.log('getting all books');
-  Book.find({})
-    .exec((err, books) => {
-      if(err) {
-        res.send('error occured')
-      } else {
-        console.log(books);
-        res.json(books);
-    }
- })
-});
 
-app.get('/books/:id', (req, res) =>
-  Book.findOne({
-    _id: req.params.id
-    })
-    .exec((err, books) => {
-      if(err) {
-        res.send('error occured')
-      } else {
-        console.log(books);
-        res.json(books);
-    }
-}));
+/*
+app.get('/contact', contactController.contactGet);
+app.post('/contact', contactController.contactPost);
+app.get('/account', userController.ensureAuthenticated, userController.accountGet);
+app.put('/account', userController.ensureAuthenticated, userController.accountPut);
+app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);
+app.get('/signup', userController.signupGet);
+app.post('/signup', userController.signupPost);
+app.get('/login', userController.loginGet);
+app.post('/login', userController.loginPost);
+app.get('/forgot', userController.forgotGet);
+app.post('/forgot', userController.forgotPost);
+app.get('/reset/:token', userController.resetGet);
+app.post('/reset/:token', userController.resetPost);
+app.get('/logout', userController.logout);
+app.get('/unlink/:provider', userController.ensureAuthenticated, userController.unlink);
 
-app.post('/book', (req, res) => {
-  let newBook = new Book();
-
-  newBook.title = req.body.title;
-  newBook.author = req.body.author;
-  newBook.category = req.body.category;
-
-  newBook.save((err, book) => {
-    if(err) {
-      res.send('error saving book');
-    } else {
-      console.log(book);
-      res.send(book);
-    }
-  })
-});
-
-app.post('/book2', (req, res) =>
-  Book.create(req.body, (err, book) => {
-    if(err) {
-      res.send('error saving book');
-    } else {
-      console.log(book);
-      res.send(book);
-  }
-}));
-
-app.put('/book/:id', (req, res) =>
-  Book.findOneAndUpdate({
-    _id: req.params.id
-    },
-    { $set: { title: req.body.title }
-  }, {upsert: true}, (err, newBook) => {
-    if (err) {
-      res.send('error updating ');
-    } else {
-      console.log(newBook);
-      res.send(newBook);
-  }
-}));
-
-app.delete('/book/:id', (req, res) =>
-  Book.findOneAndRemove({
-    _id: req.params.id
-  }, (err, book) => {
-    if(err) {
-      res.send('error removing')
-    } else {
-      console.log(book);
-      res.status(204);
-  }
-}));
-
+// Production error handler
+if (app.get('env') === 'production') {
+  app.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.sendStatus(err.status || 500);
+  });
+}
+*/
 app.listen(port, () =>
   console.log('app listening on port ' + port));

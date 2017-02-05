@@ -1,8 +1,30 @@
-# Node build artifacts
-node_modules
-npm-debug.log
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
 
-# Local development
-*.env
-*.dev
+pids
+logs
+results
+tmp
+coverage
+
+# API keys
+.env
+
+# Dependency directory
+node_modules
+bower_components
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
 .DS_Store
+Thumbs.db
