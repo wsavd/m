@@ -4,9 +4,10 @@ block content
     each book in books
       .item
         //заголовок-ссылка
-        a(href="/books/" + book._id)=book.title
+        a(href="/book/" + book._id )=book.title
         p= book.author
         p= book.category
         //p= moment(book.created_at).format("DD-MM-YYYY")
         //ниже получается ссылка на путь /book/:id
-        a.color(href="/books/" + book._id) смотреть
+        //вставит значение _id из БД каждой книжки
+        a.color(href="/book/" + book._id) смотреть

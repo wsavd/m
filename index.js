@@ -5,7 +5,8 @@ var bodyParser = require('body-parser');//для данных из форм
 var mongoose = require('mongoose');
 var Book = require('./models/book.model');
 
-var port = 8080;
+//var port = 8080;
+var port = 8000;
 var db = 'localhost/books';
 
 mongoose.connect(db);
@@ -20,8 +21,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Controllers
 //по маршруту /addbook отдаем страничку newbook.pug с формой, которая шлет данные методом post на /book 
-var addbookCtrl = require('./controllers/addbook');
-app.get('/addbook', addbookCtrl.addbook);
+var bookCtrl = require('./controllers/book.controller');
+app.get('/addbook', bookCtrl.addBook);
+app.get('/', bookCtrl.getBooks)
+app.get('/book/:id', bookCtrl.getBook)
 /*
 app.get('/', function(req, res){
   //запрос в модель  через класс доступ
@@ -31,7 +34,7 @@ app.get('/', function(req, res){
     });
   });
 });
-*/
+
 var HomeController =require('./controllers/home')
 app.get('/', HomeController.showHome);
 
