@@ -7,8 +7,8 @@ var Book = require('./models/book.model');
 
 //var port = 8080;
 var port = 8000;
-var db = 'localhost/books';
-
+var db = 'localhost/pip';
+mongoose.Promise = global.Promise;
 mongoose.connect(db);
 
 app.use(bodyParser.json());
@@ -21,10 +21,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Controllers
 //по маршруту /addbook отдаем страничку newbook.pug с формой, которая шлет данные методом post на /book 
-var bookCtrl = require('./controllers/book.controller');
-app.get('/addbook', bookCtrl.addBook);
+var bookCtrl = require('./controllers/board.controller');
 app.get('/', bookCtrl.getBooks)
-app.get('/book/:id', bookCtrl.getBook)
+app.post('/', bookCtrl.postBook)
+app.get('/board/:id', bookCtrl.getBook)
+
+
+app.post('/col', bookCtrl.postColumn)
+//app.get('/board/:id/column', bookCtrl.columnsOfBoard)
 /*
 app.get('/', function(req, res){
   //запрос в модель  через класс доступ

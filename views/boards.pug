@@ -1,0 +1,10 @@
+extends layout.pug
+block content
+  .items-container
+    each board in boards
+      .item
+        //заголовок-ссылка
+        a(href="/board/" + board.id )=board.title
+        //ниже получается ссылка на путь /board/:id
+        //вставит значение _id из БД каждой книжки
+        //a.color(href="/board/" + board._id) смотреть
