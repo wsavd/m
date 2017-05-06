@@ -34,7 +34,7 @@ exports.getBook = function(req, res) {
     if(board) {
       Column.find({}, function(err, column){
         //res.json(columns)
-        res.render('robot', {
+        res.render('board', {
         "board": board,
         "columns": column
         //board
