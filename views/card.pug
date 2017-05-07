@@ -1,0 +1,11 @@
+extends layout.pug
+block content
+  .items-container
+    h1 Доски
+    each card in cards
+      .item
+        //заголовок-ссылка
+        p=card.title
+        //ниже получается ссылка на путь /board/:id
+        //вставит значение _id из БД каждой книжки
+        //a.color(href="/board/" + board._id) смотреть

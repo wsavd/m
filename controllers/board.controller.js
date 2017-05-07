@@ -1,5 +1,6 @@
 var Book = require('../models/book.model'); // ..
 var Column = require('../models/column.model');
+var Card = require('../models/card.model');
 
 //all boards
 exports.getBooks = function(req, res){
@@ -32,7 +33,7 @@ exports.postColumn = function (req, res) {
 exports.getBook = function(req, res) {
   Book.findOne({/*где ключ в базе данных _id равен значению входящего параметра id*/_id: req.params.id}, function(err, board) {
     if(board) {
-      Column.find({}, function(err, column){
+      Column.find({boardId: req.params.id}, function(err, column){
         //res.json(columns)
         res.render('board', {
         "board": board,
@@ -51,23 +52,29 @@ exports.getBook = function(req, res) {
       })*/
   });
 };
-/*
-//board/:id/column/:id
-exports.columnsOfBoard = function (req, res) {
-    //входячий параметр
-    Book.findById({_id: req.params.id}, function(err, board) {
-        if (err) {
-            res.json({info: 'error during find board', error: err});
-        };
-        if (board) {
-            Column.find({boardId: req.params.BoardId}, function (err, columns) {
-                //res.json(columns);
-                res.render('')    
-            })
-        } else {
-            res.json({info: 'board not found'});
-        }
-    });
-};*/
+exports.postCard = function (req, res) {
+  const card = new Card({
+    title: req.body.title,
+    boardId: req.body.boardId,
+    columnId: req.body.columnId
+  });
+  card.save()
+    .then(savedCard => res.json(savedCard))
+}
 
-//board/:id/columns/:id/cards
+exports.cardOfColumns = function (req,res) {
+  Column.findById(req.params.id, function(err, column) {
+    if (err) {
+      res.json({info: 'error during find column', error: err});
+    };
+    if (column) {
+      Card.find({columnId: req.params.id}).exec(function (err, card){
+        res.render('card', {
+          "cards": card
+        })
+      });
+    } else {
+      res.json({info: 'column not found'});
+    }
+  });
+}

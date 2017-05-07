@@ -26,8 +26,11 @@ app.get('/', bookCtrl.getBooks)
 app.post('/', bookCtrl.postBook)
 app.get('/board/:id', bookCtrl.getBook)
 
-
+//app.get('/board/:id/column/:id/cards', bookCtrl.)
 app.post('/col', bookCtrl.postColumn)
+
+app.post('/card', bookCtrl.postCard);
+app.get('/board/:id/column/:id', bookCtrl.cardOfColumns)
 //app.get('/board/:id/column', bookCtrl.columnsOfBoard)
 /*
 app.get('/', function(req, res){
